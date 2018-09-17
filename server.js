@@ -1,5 +1,6 @@
 'use strict'
 
-const app = require('./src/index.js')
+const config = require('./src/config')
+const app = require('./src/startup.js')
 
-app.listen(process.env.PORT || 3000)
+app.listen(config.get('port'))

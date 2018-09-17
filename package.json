@@ -1,15 +1,20 @@
 {
   "scripts": {
     "test": "jest",
-    "start": "nodemon --watch ./src --exec yarn run start:server",
-    "start:server": "node --inspect=9229 ./server.js",
+    "dev:server": "cross-env NODE_ENV=development node --inspect=9229 ./server.js",
+    "dev": "nodemon --watch ./src --exec yarn run dev:server",
+    "start": "node ./server.js",
+    "start:production": "cross-env NODE_ENV=production yarn run start",
     "lint:fix": "standard --fix **/*.js"
   },
   "dependencies": {
+    "convict": "^4.3.2",
     "express": "^4.16.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "cross-env": "^5.2.0",
+    "http-proxy": "^1.17.0",
     "jest": "^23.4.1",
     "nodemon": "^1.18.3",
     "standard": "^11.0.1",
