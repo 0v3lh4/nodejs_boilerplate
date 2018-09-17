@@ -3,11 +3,9 @@
 const express = require('express')
 const router = express.Router()
 
-router.use(express.json())
-
 router.get('/', (req, res) => {
-  res.send({ message: 'Hello World!!!' })
-  res.end()
+  // res.send({ message: 'Hello World!!!' })
+  throw new Error('Mensagem de error')
 })
 
 module.exports = router
