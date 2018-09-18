@@ -11,6 +11,8 @@ const config = require('./config')
  */
 exports.addMiddlewares = (app) => {
   app.use(require('morgan')('combined'))
+  app.use(require('helmet')())
+  app.use(require('compression')())
   app.use(bodyParser.json())
 }
 
@@ -31,15 +33,18 @@ exports.addSpaProxy = (app) => {
     const proxy = require('http-proxy').createProxyServer()
 
     app.get('/*', (req, res) => {
-      proxy.web(req, res, { target: config.get('spa_proxy_url') })
+      proxy.web(req, res, {
+        target: config.get('spa_proxy_url'),
+        secure: false
+      })
     })
   }
 }
 
 /*
- * Handler errors
+ * Notifier errors in dev
  */
-exports.addErrorHandler = (app) => {
+exports.addErrorHandlerInDev = (app) => {
   if (env.isDevelopment) {
     const errorHandler = require('errorhandler')
     const notifier = require('node-notifier')
@@ -53,15 +58,20 @@ exports.addErrorHandler = (app) => {
 
     app.use(errorHandler({ log: errorNotification }))
   }
+}
 
+/*
+ * Handler errors in production
+ */
+exports.addErrorHandlerInProd = (app, logger) => {
   if (env.isProduction) {
     const logErrors = (err, req, res, next) => {
-      console.error(err.stack)
+      logger(err)
       next(err)
     }
 
-    const clientErrorHandler = (_, req, res, next) => {
-      res.status(500)
+    const clientErrorHandler = (err, req, res, next) => {
+      res.status(err.status || 500)
       res.send({ error: 'Operation not successful' })
     }
 

@@ -6,18 +6,19 @@ const {
   addMiddlewares,
   addSpaStatic,
   addSpaProxy,
-  addErrorHandler
+  addErrorHandlerInDev,
+  addErrorHandlerInProd
 } = require('./application')
 
-const controllers = require('./controllers')
+const { addControllers } = require('./controllers')
 
 addSpaStatic(app)
 addMiddlewares(app)
 
-// Controllers
-app.use('/api/v1/messages', controllers.api.messages)
+addControllers(app)
 
 addSpaProxy(app)
-addErrorHandler(app)
+addErrorHandlerInDev(app)
+addErrorHandlerInProd(app, (err) => console.error(err.stack))
 
 module.exports = app

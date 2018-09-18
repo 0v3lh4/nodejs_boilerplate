@@ -1,7 +1,8 @@
 'use strict'
 
-module.exports = {
-  api: {
-    messages: require('./api/messages')
-  }
+const messages = require('./api/messages')
+
+exports.addControllers = (app) => {
+  // API/V1
+  app.use('/api/v1/messages', messages)
 }
